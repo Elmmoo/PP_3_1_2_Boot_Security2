@@ -10,7 +10,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <span class="navbar-brand">
-            <!-- Используем sec:authentication для доступа к данным -->
             <span sec:authentication="principal.username"></span>
             (<span sec:authentication="principal.authorities"></span>)
         </span>
