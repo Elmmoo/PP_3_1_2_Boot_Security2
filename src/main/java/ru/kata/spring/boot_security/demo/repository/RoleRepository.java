@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.Repository;
+package ru.kata.spring.boot_security.demo.repository;
 
 import ru.kata.spring.boot_security.demo.model.Role;
 
