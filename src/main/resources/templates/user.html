@@ -1,42 +1,53 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>User Profile</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-<div class="container mt-5">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">User Profile</h3>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <span class="navbar-brand">
+            <!-- Используем sec:authentication для доступа к данным -->
+            <span sec:authentication="principal.username"></span>
+            (<span sec:authentication="principal.authorities"></span>)
+        </span>
+        <form th:action="@{/logout}" method="post" class="d-flex">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button class="btn btn-outline-danger" type="submit">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white py-3">
+            <h3 class="mb-0">User Information</h3>
         </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">Username:</label>
-                <div class="col-sm-10">
-                    <p class="form-control-plaintext" th:text="${user.username}"></p>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">Age:</label>
-                <div class="col-sm-10">
-                    <p class="form-control-plaintext" th:text="${user.age}"></p>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">Roles:</label>
-                <div class="col-sm-10">
+        <div class="card-body p-4">
+            <dl class="row">
+                <dt class="col-sm-3">ID:</dt>
+                <dd class="col-sm-9" th:text="${user.id}"></dd>
+
+                <dt class="col-sm-3">Username:</dt>
+                <dd class="col-sm-9" th:text="${user.username}"></dd>
+
+                <dt class="col-sm-3">Age:</dt>
+                <dd class="col-sm-9" th:text="${user.age}"></dd>
+
+                <dt class="col-sm-3">Roles:</dt>
+                <dd class="col-sm-9">
                     <span th:each="role : ${user.roles}"
                           class="badge bg-secondary me-1"
-                          th:text="${role.name}"></span>
-                </div>
-            </div>
-            <form th:action="@{/logout}" method="post">
-                <button type="submit" class="btn btn-danger">Logout</button>
-            </form>
+                          th:text="${#strings.replace(role.name, 'ROLE_', '')}"></span>
+                </dd>
+            </dl>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
