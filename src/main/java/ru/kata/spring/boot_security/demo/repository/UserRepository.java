@@ -9,5 +9,5 @@ public interface UserRepository {
     void save(User user);
     User getUser(Long id);
     void deleteUser(Long id);
-    User searchUser(String username);
+    User findByEmail(String email);
 }

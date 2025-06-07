@@ -38,10 +38,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User searchUser(String username) {
+    public User findByEmail(String email) {
         TypedQuery<User> query = entityManager.createQuery(
-                "SELECT u FROM User u WHERE u.username = :username", User.class);
-        query.setParameter("username", username);
+                "SELECT u FROM User u WHERE u.email = :email", User.class);
+        query.setParameter("email", email);
         try {
             return query.getSingleResult();
         } catch (NoResultException e) {

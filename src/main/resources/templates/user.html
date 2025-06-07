@@ -1,49 +1,143 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>User Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 200px;
+            --sidebar-bg: #0d6efd;
+            --sidebar-color: white;
+            --sidebar-active-bg: white;
+            --sidebar-active-color: #0d6efd;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            color: var(--sidebar-color);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .sidebar .nav-link {
+            color: var(--sidebar-color);
+            padding: 12px 20px;
+        }
+
+        .sidebar .nav-link.active {
+            background-color: var(--sidebar-active-bg);
+            color: var(--sidebar-active-color);
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .navbar-custom {
+            background-color: #343a40;
+            color: white;
+            padding: 0.5rem 1rem;
+        }
+
+        .table-container {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background-color: #0d6efd;
+            color: white;
+        }
+    </style>
 </head>
-<body class="bg-light">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <span class="navbar-brand">
-            <span sec:authentication="principal.username"></span>
-            (<span sec:authentication="principal.authorities"></span>)
-        </span>
-        <form th:action="@{/logout}" method="post" class="d-flex">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <button class="btn btn-outline-danger" type="submit">Logout</button>
-        </form>
-    </div>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar d-flex flex-column">
+    <div class="p-3 fs-5 fw-bold">User</div>
+    <ul class="nav flex-column">
+        <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+            <a class="nav-link" th:href="@{/admin}">Admin</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" th:href="@{/user}">User</a>
+        </li>
+    </ul>
 </nav>
 
-<div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white py-3">
-            <h3 class="mb-0">User Information</h3>
+
+
+
+<!-- Main Content -->
+<div class="main-content">
+
+    <!-- Top Navbar -->
+    <div class="navbar-custom d-flex justify-content-between align-items-center">
+        <div>
+            <strong th:text="${user.email}">user@mail.ru</strong> with roles:
+            <span th:each="role, iter : ${user.roles}"
+                  th:text="${role.name} + (${iter.last} ? '' : ' ')">
+        USER
+      </span>
         </div>
-        <div class="card-body p-4">
-            <dl class="row">
-                <dt class="col-sm-3">ID:</dt>
-                <dd class="col-sm-9" th:text="${user.id}"></dd>
+        <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+    </div>
 
-                <dt class="col-sm-3">Username:</dt>
-                <dd class="col-sm-9" th:text="${user.username}"></dd>
+    <div class="container-fluid py-4">
+        <!-- Page Header -->
+        <h1 class="mb-4">User Information Page</h1>
 
-                <dt class="col-sm-3">Age:</dt>
-                <dd class="col-sm-9" th:text="${user.age}"></dd>
-
-                <dt class="col-sm-3">Roles:</dt>
-                <dd class="col-sm-9">
-                    <span th:each="role : ${user.roles}"
-                          class="badge bg-secondary me-1"
-                          th:text="${#strings.replace(role.name, 'ROLE_', '')}"></span>
-                </dd>
-            </dl>
+        <!-- User Info Table -->
+        <div class="card">
+            <div class="card-body">
+                <h4 class="mb-3">User Details</h4>
+                <div class="table-responsive table-container">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Age</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td th:text="${user.id}">1</td>
+                            <td th:text="${user.firstName}">John</td>
+                            <td th:text="${user.lastName}">Doe</td>
+                            <td th:text="${user.age}">30</td>
+                            <td th:text="${user.email}">user@mail.ru</td>
+                            <td>
+                  <span th:each="role, iter : ${user.roles}"
+                        th:text="${role.name} + (${iter.last} ? '' : ', ')">
+                    USER
+                  </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+
     </div>
 </div>
 

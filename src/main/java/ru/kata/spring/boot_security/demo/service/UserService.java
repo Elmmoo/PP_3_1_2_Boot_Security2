@@ -8,6 +8,6 @@ public interface UserService {
     List<User> getAllUsers();
     void save(User user);
     void deleteUser(Long id);
-    User searchUser(String username);
+    User findByEmail(String email);
     User getUser(Long id);
 }

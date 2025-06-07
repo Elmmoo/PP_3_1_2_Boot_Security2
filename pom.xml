@@ -51,15 +51,18 @@
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
-			<version>${thymeleaf.extras.springsecurity5.version}</version>
+			<version>3.0.4.RELEASE</version>
 		</dependency>
 
 		<!-- MySQL Connector -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
+			<version>8.0.33</version> <!-- Укажите нужную версию -->
 		</dependency>
+
+
+
 
 		<!-- Lombok -->
 		<dependency>
@@ -67,6 +70,7 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 
 		<!-- For testing -->
 		<dependency>
