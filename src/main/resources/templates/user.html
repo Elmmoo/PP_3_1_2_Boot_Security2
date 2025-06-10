@@ -8,10 +8,10 @@
     <style>
         :root {
             --sidebar-width: 200px;
-            --sidebar-bg: #0d6efd;
-            --sidebar-color: white;
-            --sidebar-active-bg: white;
-            --sidebar-active-color: #0d6efd;
+            --sidebar-bg: #ffffff;   /* Синий фон сайдбара */
+            --sidebar-color: #0d49fd;   /* Белый текст */
+            --sidebar-active-bg: #0d49fd; /* Белый фон активного элемента */
+            --sidebar-active-color: #ffffff; /* Синий текст активного элемента */
         }
 
         body {
@@ -19,6 +19,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             margin: 0;
+            padding-top: 56px; /* Отступ для фиксированной верхней панели */
         }
 
         .sidebar {
@@ -45,12 +46,24 @@
         .main-content {
             margin-left: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
+            background-color: #f8f9fa; /* Светло-серый фон */
+            min-height: 100vh;
         }
 
         .navbar-custom {
-            background-color: #343a40;
+            background-color: #343a40; /* Тёмный фон */
             color: white;
             padding: 0.5rem 1rem;
+            position: fixed;
+            top: 0;
+            z-index: 1001;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 56px;
+            left: 0;
         }
 
         .table-container {
@@ -60,8 +73,12 @@
         }
 
         .table thead th {
-            background-color: #0d6efd;
-            color: white;
+            background-color: rgba(248, 249, 250, 0.11); /* Светлый фон заголовка */
+            color: black; /* Чёрный текст */
+        }
+
+        .content-container {
+            padding: 20px; /* Отступы внутри контента */
         }
     </style>
 </head>
@@ -80,34 +97,29 @@
     </ul>
 </nav>
 
-
-
-
-<!-- Main Content -->
-<div class="main-content">
-
-    <!-- Top Navbar -->
-    <div class="navbar-custom d-flex justify-content-between align-items-center">
-        <div>
-            <strong th:text="${user.email}">user@mail.ru</strong> with roles:
-            <span th:each="role, iter : ${user.roles}"
-                  th:text="${role.name} + (${iter.last} ? '' : ' ')">
-        USER
-      </span>
-        </div>
-        <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+<!-- Фиксированная верхняя панель -->
+<div class="navbar-custom">
+    <div>
+        <strong th:text="${user.email}">user@mail.ru</strong> with roles:
+        <span th:each="role, iter : ${user.roles}"
+              th:text="${#strings.substringAfter(role.name, 'ROLE_')} + (${iter.last} ? '' : ' ')">
+            USER
+        </span>
     </div>
+    <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+</div>
 
-    <div class="container-fluid py-4">
-        <!-- Page Header -->
+<!-- Основной контент -->
+<div class="main-content">
+    <div class="content-container">
         <h1 class="mb-4">User Information Page</h1>
 
-        <!-- User Info Table -->
+        <!-- Информация о пользователе -->
         <div class="card">
             <div class="card-body">
                 <h4 class="mb-3">User Details</h4>
                 <div class="table-responsive table-container">
-                    <table class="table table-striped mb-0">
+                    <table class="table table-hover mb-0">
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -127,7 +139,7 @@
                             <td th:text="${user.email}">user@mail.ru</td>
                             <td>
                   <span th:each="role, iter : ${user.roles}"
-                        th:text="${role.name} + (${iter.last} ? '' : ', ')">
+                        th:text="${#strings.substringAfter(role.name, 'ROLE_')} + (${iter.last} ? '' : ', ')">
                     USER
                   </span>
                             </td>
@@ -137,7 +149,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 

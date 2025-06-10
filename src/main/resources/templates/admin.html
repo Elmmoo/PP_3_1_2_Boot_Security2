@@ -8,10 +8,10 @@
   <style>
     :root {
       --sidebar-width: 200px;
-      --sidebar-bg: #0d6efd;
-      --sidebar-color: white;
-      --sidebar-active-bg: white;
-      --sidebar-active-color: #0d6efd;
+      --sidebar-bg: #ffffff;
+      --sidebar-color: #0d49fd;
+      --sidebar-active-bg: #0d49fd;
+      --sidebar-active-color: #ffffff;
     }
 
     body {
@@ -19,6 +19,7 @@
       min-height: 100vh;
       overflow-x: hidden;
       margin: 0;
+      padding-top: 56px; /* Добавлено для верхней панели */
     }
 
     .sidebar {
@@ -45,13 +46,27 @@
     .main-content {
       margin-left: var(--sidebar-width);
       width: calc(100% - var(--sidebar-width));
+      background-color: #f8f9fa;
+      min-height: 100vh;
     }
 
+    /* FIXED NAVBAR STYLES */
     .navbar-custom {
-      background-color: #343a40;
-      color: white;
-      padding: 0.5rem 1rem;
+      background-color: #343a40; /* Тёмно-серый цвет фона */
+      color: white;             /* Белый цвет текста */
+      padding: 0.5rem 1rem;     /* Отступы: 0.5rem сверху/снизу, 1rem слева/справа */
+      position: fixed;          /* Фиксированное позиционирование (остаётся на месте при прокрутке) */
+      top: 0;                   /* Прикрепление к верхнему краю окна */
+      z-index: 1001;            /* Высокий порядок слоя (гарантирует поверхностное отображение) */
+      width: 100%;              /* Ширина на всю доступную область */
+      box-sizing: border-box;   /* Включение padding в общую ширину/высоту */
+      display: flex;            /* Flex-контейнер для гибкого позиционирования элементов */
+      justify-content: space-between; /* Распределение пространства между элементами */
+      align-items: center;      /* Вертикальное выравнивание элементов по центру */
+      height: 56px;             /* Фиксированная высота панели */
+      left: 0;                  /* Выравнивание по левому краю окна */
     }
+
 
     .table-container {
       box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -60,8 +75,8 @@
     }
 
     .table thead th {
-      background-color: #0d6efd;
-      color: white;
+      background-color: rgba(248, 249, 250, 0.11);
+      color: black;
     }
 
     .btn-sm {
@@ -69,14 +84,13 @@
       padding: 0.25rem 0.5rem;
     }
 
-    /* Стили для модальных окон */
     .modal-content {
       border-radius: 10px;
     }
 
     .modal-header {
       background-color: #0d6efd;
-      color: white;
+      color: rgba(248, 249, 250, 0.11);
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
     }
@@ -84,6 +98,14 @@
     .role-select {
       min-height: 120px;
     }
+
+    /* Добавлено для контента под верхней панелью */
+    .content-container {
+      margin-top: 56px;
+      padding: 20px;
+
+    }
+
   </style>
 </head>
 <body>
@@ -101,22 +123,21 @@
   </ul>
 </nav>
 
+<!-- Верхняя панель теперь вне .main-content -->
+<div class="navbar-custom">
+  <div>
+    <strong th:text="${user.email}">admin@mail.ru</strong> with roles:
+    <span th:each="role, iter : ${user.roles}"
+          th:text="${#strings.substringAfter(role.name, 'ROLE_')} + (${iter.last} ? '' : ' ')">
+      ADMIN USER
+    </span>
+  </div>
+  <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+</div>
+
 <!-- Main Content -->
 <div class="main-content">
-
-  <!-- Top Navbar -->
-  <div class="navbar-custom d-flex justify-content-between align-items-center">
-    <div>
-      <strong th:text="${user.email}">admin@mail.ru</strong> with roles:
-      <span th:each="role, iter : ${user.roles}"
-            th:text="${role.name} + (${iter.last} ? '' : ' ')">
-        ADMIN USER
-      </span>
-    </div>
-    <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
-  </div>
-
-  <div class="container-fluid py-4">
+  <div class="content-container">
     <!-- Page Header -->
     <h1 class="mb-4">Admin panel</h1>
 
@@ -128,123 +149,122 @@
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="tab" href="#addUserTab">New User</a>
       </li>
-
     </ul>
 
     <!-- Tab Content -->
     <div class="tab-content">
-    <!-- Users Table -->
+      <!-- Users Table -->
       <div class="tab-pane fade show active" id="usersTab">
         <div class="card">
           <div class="card-body">
             <h4 class="mb-3">All users</h4>
             <div class="table-responsive table-container">
-          <table class="table table-hover mb-0">
-            <thead>
-            <tr>
-              <th>ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Age</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="u : ${users}"
-                th:data-id="${u.id}"
-                th:data-first-name="${u.firstName}"
-                th:data-last-name="${u.lastName}"
-                th:data-age="${u.age}"
-                th:data-email="${u.email}"
-                th:data-roles="${#strings.listJoin(u.roles.![id], ',')}">
-              <td th:text="${u.id}">2</td>
-              <td th:text="${u.firstName}">admin</td>
-              <td th:text="${u.lastName}">admin</td>
-              <td th:text="${u.age}">35</td>
-              <td th:text="${u.email}">admin@mail.ru</td>
-              <td>
-                  <span th:each="role, iter : ${u.roles}"
-                        th:text="${role.name} + (${iter.last} ? '' : ', ')">
-                    ADMIN, USER
-                  </span>
-              </td>
-              <td>
-                <button class="btn btn-info btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editModal"
-                        onclick="fillEditForm(this)">Edit</button>
-                <button class="btn btn-danger btn-sm ms-1"
-                        data-bs-toggle="modal"
-                        data-bs-target="#deleteModal"
-                        onclick="fillDeleteForm(this)">Delete</button>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+              <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Age</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${users}"
+                    th:data-id="${u.id}"
+                    th:data-first-name="${u.firstName}"
+                    th:data-last-name="${u.lastName}"
+                    th:data-age="${u.age}"
+                    th:data-email="${u.email}"
+                    th:data-roles="${#strings.listJoin(u.roles.![id], ',')}">
+                  <td th:text="${u.id}">2</td>
+                  <td th:text="${u.firstName}">admin</td>
+                  <td th:text="${u.lastName}">admin</td>
+                  <td th:text="${u.age}">35</td>
+                  <td th:text="${u.email}">admin@mail.ru</td>
+                  <td>
+                    <span th:each="role, iter : ${u.roles}"
+                          th:text="${#strings.substringAfter(role.name, 'ROLE_')} + (${iter.last} ? '' : ', ')">
+                      ADMIN, USER
+                    </span>
+                  </td>
+                  <td>
+                    <button class="btn btn-info btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editModal"
+                            onclick="fillEditForm(this)">Edit</button>
+                    <button class="btn btn-danger btn-sm ms-1"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal"
+                            onclick="fillDeleteForm(this)">Delete</button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-  </div>
-</div>
-
-
-    <!-- Add User Tab -->
-    <div class="tab-pane fade" id="addUserTab">
-      <div class="card">
-        <div class="card-header">Add new user</div>
-        <div class="card-body">
-          <form th:action="@{/admin/add}" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-            <div class="mb-3">
-              <label class="form-label fw-bold">First name</label>
-              <input type="text" name="firstName" class="form-control" required>
+      <!-- Add User Tab - MODIFIED -->
+      <div class="tab-pane fade h-100" id="addUserTab" style="background-color: white;">
+        <div class="d-flex justify-content-center h-100">
+          <div class="bg-white rounded shadow w-100">
+            <!-- Заголовок с белым фоном и текстом слева -->
+            <div class="bg-white p-3 w-100 border-bottom"> <!-- Добавлена нижняя граница -->
+              <h5 class="modal-title mb-0 fw-bold">Add new user</h5> <!-- Убран text-center, добавлен fw-bold -->
             </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-bold">Last name</label>
-              <input type="text" name="lastName" class="form-control" required>
-            </div>
+            <!-- Форма с сохранением оригинальных размеров полей -->
+            <div class="p-4" style="max-width: 500px; margin: 0 auto;">
+              <form th:action="@{/admin/add}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-            <div class="mb-3">
-              <label class="form-label fw-bold">Age</label>
-              <input type="number" name="age" class="form-control" required min="1">
-            </div>
+                <div class="mb-3">
+                  <label class="form-label fw-bold">First name</label>
+                  <input type="text" name="firstName" class="form-control" required>
+                </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-bold">Email</label>
-              <input type="email" name="email" class="form-control" required>
-            </div>
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Last name</label>
+                  <input type="text" name="lastName" class="form-control" required>
+                </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-bold">Password</label>
-              <input type="password" name="password" class="form-control" required>
-            </div>
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Age</label>
+                  <input type="number" name="age" class="form-control" required min="1">
+                </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-bold">Role</label>
-              <select multiple name="roleIds" class="form-select role-select" required>
-                <option th:each="role : ${allRoles}"
-                        th:value="${role.id}"
-                        th:text="${#strings.replace(role.name, 'ROLE_', '')}">
-                </option>
-              </select>
-            </div>
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Email</label>
+                  <input type="email" name="email" class="form-control" required>
+                </div>
 
-            <div class="d-flex justify-content-end">
-              <button type="button" class="btn btn-secondary me-2"
-                      onclick="switchToUsersTab()">Cancel</button>
-              <button type="submit" class="btn btn-success">Add User</button>
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Password</label>
+                  <input type="password" name="password" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Role</label>
+                  <select multiple name="roleIds" class="form-select role-select" required>
+                    <option th:each="role : ${allRoles}"
+                            th:value="${role.id}"
+                            th:text="${#strings.substringAfter(role.name, 'ROLE_')}">
+                    </option>
+                  </select>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                  <button type="submit" class="btn btn-success">Add User</button>
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
 
 
