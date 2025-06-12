@@ -19,8 +19,7 @@ public class UserController {
 
     @GetMapping
     public String showUserInfo(Model model, Authentication authentication) {
-        User user = userService.findByEmail(authentication.getName());
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getCurrentUser(authentication));
         return "user";
     }
 }

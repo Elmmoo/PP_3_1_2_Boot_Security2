@@ -50,21 +50,21 @@
       min-height: 100vh;
     }
 
-    /* FIXED NAVBAR STYLES */
+
     .navbar-custom {
-      background-color: #343a40; /* Тёмно-серый цвет фона */
-      color: white;             /* Белый цвет текста */
-      padding: 0.5rem 1rem;     /* Отступы: 0.5rem сверху/снизу, 1rem слева/справа */
-      position: fixed;          /* Фиксированное позиционирование (остаётся на месте при прокрутке) */
-      top: 0;                   /* Прикрепление к верхнему краю окна */
-      z-index: 1001;            /* Высокий порядок слоя (гарантирует поверхностное отображение) */
-      width: 100%;              /* Ширина на всю доступную область */
-      box-sizing: border-box;   /* Включение padding в общую ширину/высоту */
-      display: flex;            /* Flex-контейнер для гибкого позиционирования элементов */
-      justify-content: space-between; /* Распределение пространства между элементами */
-      align-items: center;      /* Вертикальное выравнивание элементов по центру */
-      height: 56px;             /* Фиксированная высота панели */
-      left: 0;                  /* Выравнивание по левому краю окна */
+      background-color: #343a40;
+      color: white;
+      padding: 0.5rem 1rem;
+      position: fixed;
+      top: 0;
+      z-index: 1001;
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 56px;
+      left: 0;
     }
 
 
@@ -99,7 +99,6 @@
       min-height: 120px;
     }
 
-    /* Добавлено для контента под верхней панелью */
     .content-container {
       margin-top: 56px;
       padding: 20px;
@@ -110,7 +109,6 @@
 </head>
 <body>
 
-<!-- Sidebar -->
 <nav class="sidebar d-flex flex-column">
   <div class="p-3 fs-5 fw-bold">Admin</div>
   <ul class="nav flex-column">
@@ -118,12 +116,12 @@
       <a class="nav-link active" th:href="@{/admin}">Admin</a>
     </li>
     <li class="nav-item">
+    <li class="nav-item" th:if="${#lists.contains(user.roles.![name], 'ROLE_USER')}">
       <a class="nav-link" th:href="@{/user}">User</a>
     </li>
   </ul>
 </nav>
 
-<!-- Верхняя панель теперь вне .main-content -->
 <div class="navbar-custom">
   <div>
     <strong th:text="${user.email}">admin@mail.ru</strong> with roles:
@@ -135,13 +133,11 @@
   <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
 </div>
 
-<!-- Main Content -->
 <div class="main-content">
   <div class="content-container">
-    <!-- Page Header -->
+
     <h1 class="mb-4">Admin panel</h1>
 
-    <!-- Tabs -->
     <ul class="nav nav-tabs mb-3" id="adminTabs">
       <li class="nav-item">
         <a class="nav-link active" data-bs-toggle="tab" href="#usersTab">Users table</a>
@@ -151,9 +147,8 @@
       </li>
     </ul>
 
-    <!-- Tab Content -->
     <div class="tab-content">
-      <!-- Users Table -->
+
       <div class="tab-pane fade show active" id="usersTab">
         <div class="card">
           <div class="card-body">
@@ -208,16 +203,14 @@
         </div>
       </div>
 
-      <!-- Add User Tab - MODIFIED -->
       <div class="tab-pane fade h-100" id="addUserTab" style="background-color: white;">
         <div class="d-flex justify-content-center h-100">
           <div class="bg-white rounded shadow w-100">
-            <!-- Заголовок с белым фоном и текстом слева -->
-            <div class="bg-white p-3 w-100 border-bottom"> <!-- Добавлена нижняя граница -->
-              <h5 class="modal-title mb-0 fw-bold">Add new user</h5> <!-- Убран text-center, добавлен fw-bold -->
+
+            <div class="bg-white p-3 w-100 border-bottom">
+              <h5 class="modal-title mb-0 fw-bold">Add new user</h5>
             </div>
 
-            <!-- Форма с сохранением оригинальных размеров полей -->
             <div class="p-4" style="max-width: 500px; margin: 0 auto;">
               <form th:action="@{/admin/add}" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -268,7 +261,6 @@
 
 
 
-<!-- Модальное окно редактирования -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -325,7 +317,6 @@
   </div>
 </div>
 
-<!-- Модальное окно удаления -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -351,7 +342,6 @@
 
 
 
-<!-- Модальное окно добавления пользователя -->
 <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -411,7 +401,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Функция заполнения формы редактирования
+
   function fillEditForm(button) {
     const row = button.closest('tr');
 
@@ -420,33 +410,28 @@
       usersTab.show();
     }
 
-    // Заполняем основные поля
     document.getElementById('editUserId').value = row.dataset.id;
     document.getElementById('editFirstName').value = row.dataset.firstName;
     document.getElementById('editLastName').value = row.dataset.lastName;
     document.getElementById('editAge').value = row.dataset.age;
     document.getElementById('editEmail').value = row.dataset.email;
 
-    // Обрабатываем роли
     const roleSelect = document.getElementById('editRoles');
     const userRoleIds = row.dataset.roles.split(',');
 
-    // Сбрасываем предыдущие выборы и устанавливаем новые
     Array.from(roleSelect.options).forEach(option => {
       option.selected = userRoleIds.includes(option.value);
     });
   }
 
-  // Функция заполнения формы удаления
   function fillDeleteForm(button) {
     const row = button.closest('tr');
     document.getElementById('deleteUserId').value = row.dataset.id;
 
-    // Формируем имя пользователя для отображения
     const userName = `${row.dataset.firstName} ${row.dataset.lastName} (${row.dataset.email})`;
     document.getElementById('userName').textContent = userName;
 
-    // Устанавливаем URL для удаления
+
     document.getElementById('deleteForm').action = `/admin/delete/${row.dataset.id}`;
   }
 </script>

@@ -8,10 +8,10 @@
     <style>
         :root {
             --sidebar-width: 200px;
-            --sidebar-bg: #ffffff;   /* Синий фон сайдбара */
-            --sidebar-color: #0d49fd;   /* Белый текст */
-            --sidebar-active-bg: #0d49fd; /* Белый фон активного элемента */
-            --sidebar-active-color: #ffffff; /* Синий текст активного элемента */
+            --sidebar-bg: #ffffff;
+            --sidebar-color: #0d49fd;
+            --sidebar-active-bg: #0d49fd;
+            --sidebar-active-color: #ffffff;
         }
 
         body {
@@ -19,7 +19,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             margin: 0;
-            padding-top: 56px; /* Отступ для фиксированной верхней панели */
+            padding-top: 56px;
         }
 
         .sidebar {
@@ -46,12 +46,12 @@
         .main-content {
             margin-left: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
-            background-color: #f8f9fa; /* Светло-серый фон */
+            background-color: #f8f9fa;
             min-height: 100vh;
         }
 
         .navbar-custom {
-            background-color: #343a40; /* Тёмный фон */
+            background-color: #343a40;
             color: white;
             padding: 0.5rem 1rem;
             position: fixed;
@@ -73,18 +73,17 @@
         }
 
         .table thead th {
-            background-color: rgba(248, 249, 250, 0.11); /* Светлый фон заголовка */
-            color: black; /* Чёрный текст */
+            background-color: rgba(248, 249, 250, 0.11);
+            color: black;
         }
 
         .content-container {
-            padding: 20px; /* Отступы внутри контента */
+            padding: 20px;
         }
     </style>
 </head>
 <body>
 
-<!-- Sidebar -->
 <nav class="sidebar d-flex flex-column">
     <div class="p-3 fs-5 fw-bold">User</div>
     <ul class="nav flex-column">
@@ -97,7 +96,6 @@
     </ul>
 </nav>
 
-<!-- Фиксированная верхняя панель -->
 <div class="navbar-custom">
     <div>
         <strong th:text="${user.email}">user@mail.ru</strong> with roles:
@@ -109,12 +107,10 @@
     <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
 </div>
 
-<!-- Основной контент -->
 <div class="main-content">
     <div class="content-container">
         <h1 class="mb-4">User Information Page</h1>
 
-        <!-- Информация о пользователе -->
         <div class="card">
             <div class="card-body">
                 <h4 class="mb-3">User Details</h4>
