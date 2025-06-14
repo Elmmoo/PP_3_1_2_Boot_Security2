@@ -1,19 +1,34 @@
 package ru.kata.spring.boot_security.demo.dto;
 
-import lombok.Data;
+import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-
-public class EditUserDto {
+public class UserResponseDto {
     private Long id;
     private String firstName;
     private String lastName;
     private String email;
-    private String password;
     private int age;
-    private List<Long> roleIds;
+    private List<String> roles;
 
+    public UserResponseDto() {
+        // Пустой конструктор для Jackson
+    }
+
+    public UserResponseDto(User user) {
+        this.id = user.getId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
+        this.age = user.getAge();
+        this.roles = user.getRoles().stream()
+                .map(role -> role.getName())
+                .collect(Collectors.toList());
+    }
+
+    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
@@ -46,14 +61,6 @@ public class EditUserDto {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public int getAge() {
         return age;
     }
@@ -62,11 +69,11 @@ public class EditUserDto {
         this.age = age;
     }
 
-    public List<Long> getRoleIds() {
-        return roleIds;
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public void setRoleIds(List<Long> roleIds) {
-        this.roleIds = roleIds;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kata.spring.boot_security.demo.dto.AddUserDto;
 import ru.kata.spring.boot_security.demo.dto.EditUserDto;
+import ru.kata.spring.boot_security.demo.dto.UserResponseDto;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -39,8 +40,6 @@ public class UserServiceImpl implements UserService {
         if (user.getId() == null || user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Password is required for new users.");
         }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -63,6 +62,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void createUserFromDto(AddUserDto dto) {
+        if (userRepository.findByEmail(dto.getEmail()) != null) {
+            throw new IllegalArgumentException("Email already exists");
+        }
         User user = new User();
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
@@ -76,7 +78,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUserFromDto(EditUserDto dto) {
+        User existingUser = userRepository.findByEmail(dto.getEmail());
+        if (existingUser != null && !existingUser.getId().equals(dto.getId())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
         User user = getUser(dto.getId());
+
+        if (user == null) {
+            throw new IllegalArgumentException("User not found with id: " + dto.getId());
+        }
 
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
@@ -97,5 +107,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUser(Authentication authentication) {
         return findByEmail(authentication.getName());
+    }
+
+    public UserResponseDto convertToDto(User user) {
+        return new UserResponseDto(user);
     }
 }
