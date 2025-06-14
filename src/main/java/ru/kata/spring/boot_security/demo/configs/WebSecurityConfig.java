@@ -59,10 +59,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/auth/csrf").permitAll() // Разрешить получение CSRF
+                .antMatchers(HttpMethod.GET, "/api/auth/csrf").permitAll()
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .antMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/", "/index.html", "/login.html", "/static/**", "/favicon.ico").permitAll()
+                // ----- ВОТ ИЗМЕНЕНИЕ -----
+                .antMatchers("/", "/index.html", "/login.html", "/static/**", "/css/**", "/js/**", "/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
