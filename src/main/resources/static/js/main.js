@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_BASE_URL = 'http://localhost:8080/api';
     const page = window.location.pathname;
 
-    // --- UTILITY FUNCTIONS ---
+
     function getCookie(name) {
         let matches = document.cookie.match(new RegExp(
             "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'X-XSRF-TOKEN': csrfToken
     };
 
-    // --- GENERAL PAGE LOGIC ---
+
     async function getCurrentUser() {
         try {
             const response = await fetch(`${API_BASE_URL}/auth/current`);
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- LOGIN PAGE LOGIC ---
+
     if (page.includes('/login.html')) {
         const loginForm = document.getElementById('login-form');
         if(loginForm) {
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- USER PAGE LOGIC ---
+
     if (page.includes('/user.html')) {
         const userTbody = document.getElementById('user-info-body');
 
@@ -134,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })();
     }
 
-    // --- ADMIN PAGE LOGIC ---
     if (page.includes('/admin.html')) {
         // Elements
         const usersTbody = document.getElementById('users-table-body');
@@ -143,21 +142,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const usersTableView = document.getElementById('users-table-view');
         const addUserView = document.getElementById('add-user-view');
 
-        // Add Form
+
         const addUserForm = document.getElementById('add-user-form');
         const addRolesSelect = document.getElementById('add-roles');
 
-        // Edit Modal
+
         const editModal = document.getElementById('edit-modal');
         const editForm = document.getElementById('edit-user-form');
         const editRolesSelect = document.getElementById('edit-roles');
 
-        // Delete Modal
+
         const deleteModal = document.getElementById('delete-modal');
         const deleteForm = document.getElementById('delete-user-form');
         const deleteRolesSelect = document.getElementById('delete-roles');
 
-        // --- Data Loading ---
+
         async function loadAllRoles() {
             const response = await fetch(`${API_BASE_URL}/admin/roles`, { headers });
             const roles = await response.json();
@@ -186,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `).join('');
         }
 
-        // --- UI Toggling ---
+
         function showTab(viewToShow, btnToActivate) {
             [usersTableView, addUserView].forEach(v => v.classList.add('hidden'));
             [showUsersBtn, showAddFormBtn].forEach(b => b.classList.remove('active'));
@@ -197,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showUsersBtn.addEventListener('click', () => showTab(usersTableView, showUsersBtn));
         showAddFormBtn.addEventListener('click', () => showTab(addUserView, showAddFormBtn));
 
-        // --- CRUD Operations ---
+
         addUserForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const selectedRoles = Array.from(addRolesSelect.selectedOptions).map(opt => opt.value);
@@ -235,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // --- Modal Logic ---
+
         function closeModal(modal) {
             modal.classList.add('hidden');
         }
@@ -290,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 email: document.getElementById('edit-email').value,
                 roleIds: selectedRoles
             };
-            // Only include password if it's not empty
+
             if (password) {
                 userUpdate.password = password;
             }
@@ -324,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Modal close buttons
+
         document.getElementById('edit-close-btn').onclick = () => closeModal(editModal);
         document.getElementById('edit-cancel-btn').onclick = () => closeModal(editModal);
         document.getElementById('delete-close-btn').onclick = () => closeModal(deleteModal);
@@ -334,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === deleteModal) closeModal(deleteModal);
         };
 
-        // --- Initial Load for Admin Page ---
+
         (async () => {
             const user = await getCurrentUser();
             if (user && user.authorities.some(a => a.authority === 'ROLE_ADMIN')) {
@@ -343,10 +342,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 await loadAllRoles();
                 await loadAllUsers();
             } else if (user) {
-                // Not an admin but logged in, go to user page
+
                 window.location.href = '/user.html';
             }
-            // If user is null, getCurrentUser already redirected
+
         })();
     }
 });

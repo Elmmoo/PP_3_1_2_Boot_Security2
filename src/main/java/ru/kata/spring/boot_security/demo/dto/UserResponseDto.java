@@ -14,7 +14,7 @@ public class UserResponseDto {
     private List<String> roles;
 
     public UserResponseDto() {
-        // Пустой конструктор для Jackson
+
     }
 
     public UserResponseDto(User user) {
@@ -28,7 +28,6 @@ public class UserResponseDto {
                 .collect(Collectors.toList());
     }
 
-    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }

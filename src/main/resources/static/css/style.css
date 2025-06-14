@@ -1,4 +1,4 @@
-/* General Styles */
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     margin: 0;
@@ -10,7 +10,7 @@ body {
     display: none !important;
 }
 
-/* Login Page */
+
 .login-container {
     width: 100%;
     max-width: 330px;
@@ -41,7 +41,7 @@ body {
     z-index: 2;
 }
 
-/* Buttons */
+
 .btn {
     display: inline-block;
     font-weight: 400;
@@ -109,7 +109,7 @@ body {
     border-radius: .25rem;
 }
 
-/* Main Layout */
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -138,7 +138,7 @@ body {
 .sidebar {
     width: 200px;
     background-color: #fff;
-    height: calc(100vh - 56px); /* Full height minus header */
+    height: calc(100vh - 56px);
     padding: 15px 0;
 }
 
@@ -175,7 +175,7 @@ body {
     margin-top: 20px;
 }
 
-/* Tabs */
+
 .tabs .tab-btn {
     background-color: #e9ecef;
     border: 1px solid #dee2e6;
@@ -188,7 +188,7 @@ body {
     border-bottom-color: #fff;
 }
 
-/* Table */
+
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -206,7 +206,7 @@ body {
     background-color: #f2f2f2;
 }
 
-/* Add User Form */
+
 .add-user-form {
     background: #fff;
     padding: 20px;
@@ -237,7 +237,7 @@ body {
     text-align: center;
 }
 
-/* Modal Styles */
+
 .modal {
     position: fixed;
     z-index: 1000;

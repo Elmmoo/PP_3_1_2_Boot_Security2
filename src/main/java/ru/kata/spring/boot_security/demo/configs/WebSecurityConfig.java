@@ -53,16 +53,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                // Настройка CORS для разработки
+
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
-
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/auth/csrf").permitAll()
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .antMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
-                // ----- ВОТ ИЗМЕНЕНИЕ -----
                 .antMatchers("/", "/index.html", "/login.html", "/static/**", "/css/**", "/js/**", "/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -85,13 +83,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
-                // Включение CSRF с настройкой для REST
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .ignoringAntMatchers("/api/auth/login"); // Игнорировать для входа
     }
 
-    // Настройка CORS (для разработки)
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
@@ -158,7 +154,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    // Бин для получения CSRF токена
     @Bean
     @Order(0)
     public FilterRegistrationBean<CsrfTokenFilter> csrfTokenFilter() {
@@ -168,7 +163,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return registration;
     }
 
-    // Фильтр для добавления CSRF токена в атрибуты запроса
     public static class CsrfTokenFilter extends OncePerRequestFilter {
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

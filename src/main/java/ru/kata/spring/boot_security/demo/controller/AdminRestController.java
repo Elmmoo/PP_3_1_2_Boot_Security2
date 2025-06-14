@@ -30,7 +30,6 @@ public class AdminRestController {
         User user = userService.getUser(id);
         return ResponseEntity.ok(new UserResponseDto(user));
     }
-    // Получение всех пользователей
 
     @GetMapping("/users")
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
@@ -39,27 +38,27 @@ public class AdminRestController {
                 .collect(Collectors.toList()));
     }
 
-    // Получение всех ролей
+
     @GetMapping("/roles")
     public ResponseEntity<?> getAllRoles() {
         return ResponseEntity.ok(roleService.getAllRoles());
     }
 
-    // Создание пользователя
+
     @PostMapping("/users")
     public ResponseEntity<?> addUser(@RequestBody AddUserDto addUserDto) {
         userService.createUserFromDto(addUserDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("User created");
     }
 
-    // Обновление пользователя
+
     @PutMapping("/users")
     public ResponseEntity<?> editUser(@RequestBody EditUserDto userDto) {
         userService.updateUserFromDto(userDto);
         return ResponseEntity.ok("User updated");
     }
 
-    // Удаление пользователя
+
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

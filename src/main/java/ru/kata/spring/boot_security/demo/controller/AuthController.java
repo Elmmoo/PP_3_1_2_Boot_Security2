@@ -17,7 +17,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login() {
-        // Spring Security обрабатывает аутентификацию автоматически
         return ResponseEntity.ok().build();
     }
 

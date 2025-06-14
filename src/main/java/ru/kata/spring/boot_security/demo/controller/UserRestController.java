@@ -17,14 +17,12 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    // Получение информации о текущем пользователе
     @GetMapping
     public ResponseEntity<?> getUserInfo(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        // Получаем username из аутентификации
         String username = authentication.getName();
         User user = userService.findByEmail(username);
 

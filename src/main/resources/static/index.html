@@ -1,4 +1,4 @@
-<!-- index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,7 +71,7 @@
 </div>
 
 <script>
-  // Check authentication status on page load
+
   fetch('/api/auth/current', {
     credentials: 'include'
   })
@@ -93,7 +93,7 @@
             document.getElementById('authButtons').style.display = 'block';
           });
 
-  // Logout functionality
+
   document.getElementById('logoutBtn')?.addEventListener('click', () => {
     fetch('/api/auth/logout', {
       method: 'POST',
